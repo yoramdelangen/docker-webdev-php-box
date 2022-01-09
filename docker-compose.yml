@@ -12,8 +12,10 @@ services:
   #     - .docker/caddy/Caddyfile:/etc/caddy/Caddyfile
   #     - ./data/caddy/data:/data
   #     - ./data/caddy/config:/config
+
   nginx:
     image: nginx:1.21
+    container_name: "devbox-nginx"
     ports:
       - "8080:80"
     volumes:
@@ -26,10 +28,17 @@ services:
   php74:
     build:
       context: .docker/php74
-    container_name: ""
+    container_name: "devbox-php74"
     restart: unless-stopped
     volumes:
       - $PWD/php74:/webapps/php74
+
+  php80:
+    image: php:8.0-fpm-alpine
+    container_name: "devbox-php80"
+    restart: unless-stopped
+    volumes:
+      - $PWD/php80:/webapps/php80
 
 # - https://newbedev.com/how-to-setup-mass-dynamic-virtual-hosts-in-nginx
 # - https://tech.osteel.me/posts/docker-for-local-web-development-part-1-a-basic-lemp-stack
