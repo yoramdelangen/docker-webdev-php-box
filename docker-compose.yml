@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  # caddy:
+  #   image: caddy:2
+  #   restart: unless-stopped
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #     - "2019:2019"
+  #   volumes:
+  #     - .docker/caddy/Caddyfile:/etc/caddy/Caddyfile
+  #     - ./data/caddy/data:/data
+  #     - ./data/caddy/config:/config
+  nginx:
+    image: nginx:1.21
+    ports:
+      - "8080:80"
+    volumes:
+      - $PWD/.docker/nginx/conf.d:/etc/nginx/conf.d
+      - $PWD/php74:/webapps/php74
+    links:
+      - php74
+    command: "nginx-debug -g 'daemon off;'"
+
+  php74:
+    build:
+      context: .docker/php74
+    container_name: ""
+    restart: unless-stopped
+    volumes:
+      - $PWD/php74:/webapps/php74
+
+# - https://newbedev.com/how-to-setup-mass-dynamic-virtual-hosts-in-nginx
+# - https://tech.osteel.me/posts/docker-for-local-web-development-part-1-a-basic-lemp-stack
+# - http://geekyplatypus.com/dockerise-your-php-application-with-nginx-and-php7-fpm/
+# - http://geekyplatypus.com/making-your-dockerised-php-application-even-better/ -- continued from previous link

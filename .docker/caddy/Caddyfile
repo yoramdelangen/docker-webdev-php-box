@@ -1,0 +1,14 @@
+{
+  debug
+  auto_https off
+  log stderr
+}
+
+localhost.php74 {
+  encode gzip
+  php_fastcgi php74:9000
+}
+
+localhost.d {
+	respond "Hello, world from .d!"
+}
