@@ -24,5 +24,3 @@ COPY --from=composer:2.0 /usr/bin/composer /usr/local/bin/composer
 # Set working directory
 WORKDIR /app
 
-# USER $user
-
