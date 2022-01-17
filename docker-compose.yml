@@ -1,18 +1,6 @@
 version: '3.8'
 
 services:
-  # caddy:
-  #   image: caddy:2
-  #   restart: unless-stopped
-  #   ports:
-  #     - "80:80"
-  #     - "443:443"
-  #     - "2019:2019"
-  #   volumes:
-  #     - .docker/caddy/Caddyfile:/etc/caddy/Caddyfile
-  #     - ./data/caddy/data:/data
-  #     - ./data/caddy/config:/config
-
   dnsmasq:
     image: jpillora/dnsmasq:latest
     container_name: devbox-dnsmasq
@@ -48,7 +36,8 @@ services:
       - $PHP74_PATH:/webapps/php74
 
   php80:
-    image: php:8.0-fpm-alpine
+    build: 
+      context: .docker/php80
     container_name: "devbox-php80"
     volumes:
       - $PHP80_PATH:/webapps/php80

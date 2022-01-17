@@ -32,7 +32,15 @@ artisan80() {
 
 # Run a Composer command
 composer80() {
-	docker exec -it devbox-php80 composer "${@:1}"
+	docker exec -it devbox-php80 composer ${@:1}
+}
+
+ssh74() {
+	docker exec -it devbox-php74 /bin/sh
+}
+
+ssh80() {
+	docker exec -it devbox-php80 /bin/sh
 }
 
 # Remove the entire Docker environment
@@ -103,6 +111,12 @@ composer74)
 composer80)
 	composer80 "${@:2}"
 	;;
+ssh74)
+	ssh74 "${@:2}"
+	;;
+ssh80)
+	ssh80 "${@:2}"
+	;;
 destroy)
 	destroy
 	;;
@@ -138,11 +152,13 @@ Usage:
 Available commands:
   PHP 7.4:
     artisan74 ................................. Run an Artisan command for PHP 74
-    artisan80 ................................. Run an Artisan command for PHP 80
+    composer74 ................................ Run a Composer command for PHP 74
+    ssh74 ..................................... SSH into the PHP 74 container
 
   PHP 8.0:
-    composer74 ................................ Run a Composer command for PHP 74
+    artisan80 ................................. Run an Artisan command for PHP 80
     composer80 ................................ Run a Composer command for PHP 80
+    ssh80 ..................................... SSH into the PHP 80 container
 
   Docker:
     destroy ................................... Remove the entire Docker environment
