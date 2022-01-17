@@ -15,10 +15,6 @@ fi
 
 CURRENT_SCRIPT=$(dirname $(readlink -n $0))
 
-echo $CURRENT_SCRIPT
-
-exit
-
 # Run an Artisan command
 artisan74() {
 	docker exec -it devbox-php74 php artisan ${@:1}
@@ -86,7 +82,8 @@ dnsmasq() {
 }
 
 link() {
-	ln -sf "$CURRENT_SCRIPT/devbox.sh" /usr/local/bin/devbox
+	echo "We need sudo to symlink in the /usr/local/bin directory"
+	sudo ln -sf "$CURRENT_SCRIPT/devbox.sh" /usr/local/bin/devbox
 }
 
 #######################################
