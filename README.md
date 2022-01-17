@@ -6,6 +6,9 @@ This project should be usefully for web development targeting PHP.
 
 MacOS should resolve the tld's of the PHP domains and forward those to Dnsmasq.
 Run the following commands on the command line:
+
+Make sure in your `/etc/resolv.conf` the nameserver is set to `127.0.0.1` instead of your DHCP servcer/Router ip.
+
 ```bash
 sudo bash -c 'echo "nameserver 127.0.0.1" > /etc/resolver/php74'
 sudo bash -c 'echo "nameserver 127.0.0.1" > /etc/resolver/php80'
