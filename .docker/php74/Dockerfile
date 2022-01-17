@@ -5,7 +5,7 @@ ARG SSL_PUB_KEY
 ARG LICENSE_FILE
 
 # Install system dependencies
-RUN apk update && apk add curl zip unzip git
+RUN apk update && apk add curl zip unzip git openssh
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 
@@ -22,5 +22,5 @@ COPY --from=composer:2.0 /usr/bin/composer /usr/local/bin/composer
 #     chown -R $user:$user /home/$user
 
 # Set working directory
-WORKDIR /webapps
+WORKDIR /webapps/php74
 

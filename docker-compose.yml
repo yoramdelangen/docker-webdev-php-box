@@ -34,6 +34,7 @@ services:
     container_name: "devbox-php74"
     volumes:
       - $PHP74_PATH:/webapps/php74
+      - ~/.ssh:/root/.ssh
 
   php80:
     build: 
@@ -41,6 +42,7 @@ services:
     container_name: "devbox-php80"
     volumes:
       - $PHP80_PATH:/webapps/php80
+      - ~/.ssh:/root/.ssh
 
 # - https://newbedev.com/how-to-setup-mass-dynamic-virtual-hosts-in-nginx
 # - https://tech.osteel.me/posts/docker-for-local-web-development-part-1-a-basic-lemp-stack
