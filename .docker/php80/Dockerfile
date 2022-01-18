@@ -1,4 +1,4 @@
-FROM php:8.0-fpm-alpine
+FROM php:8.0-fpm
 
 ARG SSL_KEY
 ARG SSL_PUB_KEY
