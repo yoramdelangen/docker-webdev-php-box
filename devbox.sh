@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 
+CURRENT_SCRIPT=$(cd  -- "$( dirname -- $(realpath "${BASH_SOURCE[0]}") )" &> /dev/null && pwd)
+
+DOCKER_WORKDIR='/webapps'
+
 # load all dot.env environment files otherwise we fallback
-if [ -f .env ]; then
-	export $(grep -vE "^(#.*|\s*)$" .env)
+if [ -f "$CURRENT_SCRIPT/.env" ]; then
+	export $(grep -vE "^(#.*|\s*)$" "$CURRENT_SCRIPT/.env")
 fi
 
 # making sure PHP folders are set
@@ -13,57 +17,55 @@ if [ -z "$PHP80_PATH" ]; then
   echo "PHP80 path was not set in the .env file. Make sure 'PHP80_PATH' is set."
 fi
 
-CURRENT_SCRIPT=$(dirname $(readlink -n $0))
+PHP74_PATH=$(realpath $PHP74_PATH)
+PHP80_PATH=$(realpath $PHP80_PATH)
+
+DOCKER_PHP74_WORKDIR="$DOCKER_WORKDIR/php74/${PWD/$PHP74_PATH\//""}"
+DOCKER_PHP80_WORKDIR="$DOCKER_WORKDIR/php80/${PWD/$PHP80_PATH\//""}"
 
 # Run an Artisan command
 artisan74() {
-	docker exec -it devbox-php74 php artisan ${@:1}
+	docker exec -w $DOCKER_PHP74_WORKDIR -it devbox-php74 php artisan ${@:1}
 }
 
 # Run a Composer command
 composer74() {
-	docker exec -it devbox-php74 composer "${@:1}"
+	docker exec -w $DOCKER_PHP74_WORKDIR -it devbox-php74 composer "${@:1}"
 }
 
 # Run an Artisan command
 artisan80() {
-	docker exec -it devbox-php80 php artisan "${@:1}"
+	docker exec -w $DOCKER_PHP80_WORKDIR -it devbox-php80 php artisan "${@:1}"
 }
 
 # Run a Composer command
 composer80() {
-	docker exec -it devbox-php80 composer ${@:1}
+	docker exec -w $DOCKER_PHP80_WORKDIR -it devbox-php80 composer ${@:1}
 }
 
 ssh74() {
-	docker exec -it devbox-php74 /bin/sh
+	docker exec -w $DOCKER_PHP74_WORKDIR -it devbox-php74 /bin/sh
 }
 
 ssh80() {
-	docker exec -it devbox-php80 /bin/sh
+	docker exec -w $DOCKER_PHP80_WORKDIR -it devbox-php80 /bin/sh
 }
 
 # Remove the entire Docker environment
 destroy() {
 	read -p "This will delete containers, volumes and images. Are you sure? [y/N]: " -r
 	if [[ ! $REPLY =~ ^[Yy]$ ]]; then exit; fi
-	cd $CURRENT_SCRIPT
-	docker compose down -v --rmi all --remove-orphans
-	cd -
+	cd $CURRENT_SCRIPT && docker compose down -v --rmi all --remove-orphans
 }
 
 # Stop and destroy all containers
 down() {
-	cd $CURRENT_SCRIPT
-	docker compose down "${@:1}"
-	cd -
+	cd $CURRENT_SCRIPT && docker compose down "${@:1}"
 }
 
 # Display and tail the logs of all containers or the specified one's
 logs() {
-	cd $CURRENT_SCRIPT
-	docker compose logs -f "${@:1}"
-	cd -
+	cd $CURRENT_SCRIPT && docker compose logs -f "${@:1}"
 }
 
 # Restart the containers
@@ -73,16 +75,12 @@ restart() {
 
 # Start the containers
 start() {
-	cd $CURRENT_SCRIPT
-	docker compose up -d
-	cd -
+	cd $CURRENT_SCRIPT && docker compose up -d
 }
 
 # Stop the containers
 stop() {
-	cd $CURRENT_SCRIPT
-	docker compose stop
-	cd -
+	cd $CURRENT_SCRIPT && docker compose stop
 }
 
 dnsmasq() {

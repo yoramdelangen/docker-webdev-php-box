@@ -1,26 +1,29 @@
-FROM php:8.0-fpm
+FROM php:8.0-fpm-alpine
 
-ARG SSL_KEY
-ARG SSL_PUB_KEY
-ARG LICENSE_FILE
+ENV PHP_EXTRA_CONFIGURE_ARGS --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data
 
 # Install system dependencies
-RUN apk update && apk add curl zip unzip git openssh
+RUN apk update && apk add curl zip unzip git openssh su-exec
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 
 # Install PHP extensions
-RUN install-php-extensions bcmath zip intl mcrypt mbstring exif pcntl bcmath gd json \
-  pdo_mysql pdo_pgsql pdo_dblib pdo_oci pdo_odbc pdo_pgsql pdo_sqlsrv pdo_sqlite oci8 odbc pgsql sqlsrv sqlite3 bz2 zlib;
+RUN install-php-extensions zip intl mcrypt exif pcntl bcmath gd \
+  pdo_mysql pdo_dblib pdo_oci pdo_odbc pdo_pgsql pdo_sqlsrv oci8 odbc pgsql sqlsrv bz2;
 
 # Get latest Composer
 COPY --from=composer:2.0 /usr/bin/composer /usr/local/bin/composer
 
 # # Create system user to run Composer and Artisan Commands
-# RUN useradd -G www-data,root -u $uid -d /home/$user $user
-# RUN mkdir -p /home/$user/.composer && \
-#     chown -R $user:$user /home/$user
+# RUN adduser -G www-data -u 1000 -g 1000 -h /webapps -S www-data
+RUN mkdir -p /webapps/.composer && \
+    chown -R www-data:www-data /webapps
+
+USER www-data
 
 # Set working directory
 WORKDIR /webapps/php80
 
+CMD ["php-fpm", "-R", "--nodaemonize"] 
+
+# ENTRYPOINT ["su-exec", "nobody", "/usr/sbin/php-fpm7", "--nodaemonize", "--force-stderr"]
