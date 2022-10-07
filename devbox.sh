@@ -44,11 +44,11 @@ composer80() {
 }
 
 ssh74() {
-	docker exec -w $DOCKER_PHP74_WORKDIR -it devbox-php74 /bin/sh
+	docker exec -it devbox-php74 /bin/sh
 }
 
 ssh80() {
-	docker exec -w $DOCKER_PHP80_WORKDIR -it devbox-php80 /bin/sh
+	docker exec -it devbox-php80 /bin/sh
 }
 
 # Remove the entire Docker environment

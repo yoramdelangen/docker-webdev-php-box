@@ -28,20 +28,20 @@ services:
       - php80
     command: "nginx-debug -g 'daemon off;'"
 
-  php74:
-    build:
-      context: .docker/php74
-    container_name: "devbox-php74"
-    volumes:
-      - $PHP74_PATH:/webapps/php74
-      - ~/.ssh:/root/.ssh
+  # php74:
+  #   build:
+  #     context: .docker/php74
+  #   container_name: "devbox-php74"
+  #   volumes:
+  #     - $PHP74_PATH:/webapps/php74
+  #     - ~/.ssh:/root/.ssh
 
   php80:
-    build: 
+    build:
       context: .docker/php80
     container_name: "devbox-php80"
     volumes:
-      - $PHP80_PATH:/webapps/php80
+      - $PHP80_PATH:/webapps/php80:rw
       - ~/.ssh:/root/.ssh
 
 # - https://newbedev.com/how-to-setup-mass-dynamic-virtual-hosts-in-nginx
